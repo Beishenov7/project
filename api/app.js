@@ -1,39 +1,35 @@
 var express = require('express');
 var app = express();
 var uuid = require('node-uuid');
+var mysql = require('mysql2');
 
-var pg = require('pg');
+// MySQL connection configuration
 const conString = {
     user: process.env.DBUSER,
     database: process.env.DB,
     password: process.env.DBPASS,
     host: process.env.DBHOST,
-    port: process.env.DBPORT                
+    port: process.env.DBPORT
 };
+
+var pool = mysql.createPool(conString);
 
 // Routes
 app.get('/api/status', function(req, res) {
-//'SELECT now() as time', [], function(err, result
-  
-  const Pool = require('pg').Pool
-  const pool = new Pool(conString)
   // connection using created pool
-  pool.connect((err, client, release) => {
+  pool.getConnection((err, connection) => {
     if (err) {
-      return console.error('Error acquiring client', err.stack)
+      return console.error('Error acquiring client', err.stack);
     }
-    client.query('SELECT now() as time', (err, result) => {
-      release()
-    if (err) {
-      console.log(err);
-      return console.error('Error executing query', err.stack)
-    }
-    res.status(200).send(result.rows);
+    connection.query('SELECT NOW() AS time', (err, result) => {
+      connection.release();
+      if (err) {
+        console.log(err);
+        return console.error('Error executing query', err.stack);
+      }
+      res.status(200).send(result);
+    });
   });
-});
-
-  // pool shutdown
-  pool.end()
 });
 
 // catch 404 and forward to error handler
@@ -67,5 +63,5 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
 module.exports = app;
+
