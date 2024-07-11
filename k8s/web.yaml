@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-web
+spec:
+  selector:
+    app: devops-web
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devops-web
+  template:
+    metadata:
+      labels:
+        app: devops-web
+    spec:
+      containers:
+      - name: devops-web
+        image: karabalta75/web:1.0.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: API_HOST
+          value: http://devops-api:3001
+        - name: PORT
+          value: "3000"
