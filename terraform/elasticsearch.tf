@@ -8,8 +8,8 @@ provider "helm" {
   }
 }
 
-# resource "helm_release" "example" {
-#   name       = "example-release"
+# resource "helm_release" "elasticsearch" {
+#   name       = "elasticsearch"
 #   repository = "elastic https://helm.elastic.co"
 #   chart      = "elastic/elasticsearch"
 #   version    = "8.5.1"

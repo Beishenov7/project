@@ -8,8 +8,8 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "example" {
-  name       = "example-release"
+resource "helm_release" "kibana" {
+  name       = "kibana"
   repository = "elastic https://helm.elastic.co"
   chart      = "elastic/kibana"
   version    = "8.5.1"
