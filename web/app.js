@@ -21,6 +21,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Health check endpoint
+app.get('/health', function(req, res) {
+    res.status(200).send('OK');
+  });
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler

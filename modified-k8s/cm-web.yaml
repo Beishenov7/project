@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devops-web-config
+data:
+  API_HOST: http://devops-api:3001
+  PORT: "3000"

@@ -14,6 +14,11 @@ const conString = {
 
 var pool = mysql.createPool(conString);
 
+// Health check endpoint
+app.get('/health', function(req, res) {
+  res.status(200).send('OK');
+});
+
 // Routes
 app.get('/api/status', function(req, res) {
   // connection using created pool
