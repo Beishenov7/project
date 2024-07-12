@@ -11,21 +11,6 @@ provider "helm" {
 resource "helm_release" "example" {
   name       = "example-release"
   repository = "elastic https://helm.elastic.co"
-  chart      = "elastic/elasticsearch"
+  chart      = "elastic/filebeat"
   version    = "8.5.1"
-
-  set {
-    name  = "replicas"
-    value = "2"
-  }
-
-  set {
-    name  = "resources.requests.cpu"
-    value = "100m"
-  }
-
-  set {
-    name  = "resources.requests.memory"
-    value = "1Gi"
-  }
 }
