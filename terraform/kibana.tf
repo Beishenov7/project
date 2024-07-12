@@ -1,13 +1,3 @@
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
-}
-
 resource "helm_release" "kibana" {
   name       = "kibana"
   repository = "elastic https://helm.elastic.co"
