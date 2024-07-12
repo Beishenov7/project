@@ -22,6 +22,6 @@ resource "helm_release" "web" {
 
 resource "helm_release" "mysql" {
   name       = "mysql"
-  chart      = "../helm/mysql"
+  chart      = "../helm/db"
   version    = "0.1.0"
 }
