@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-devops-api-config
+data:
+  DBUSER: {{ .Values.env.DBUSER }}
+  DB: {{ .Values.env.DB }}
+  DBHOST: {{ .Values.env.DBHOST }}
+  DBPORT: "{{ .Values.env.DBPORT }}"
+  PORT: "{{ .Values.env.PORT }}"

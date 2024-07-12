@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-mysql-backup
+spec:
+  schedule: "{{ .Values.backup.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mysql-backup
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            command:
+            - /bin/sh
+            - -c
+            - mysqldump -h mysql -u {{ .Values.env.MYSQL_USER }} -p{{ .Values.env.MYSQL_PASSWORD }} {{ .Values.env.MYSQL_DATABASE }} > /backup/devops_db_backup.sql
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-backup-pvc

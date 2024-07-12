@@ -1,0 +1,30 @@
+replicaCount: 3
+
+image:
+  repository: karabalta75/api
+  tag: "2.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 3001
+
+env:
+  DBUSER: devops_user
+  DB: devops_db
+  DBHOST: mysql
+  DBPORT: "3306"
+  PORT: "3001"
+  DBPASS: password
+
+readinessProbe:
+  path: /health
+  port: 3001
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+livenessProbe:
+  path: /health
+  port: 3001
+  initialDelaySeconds: 10
+  periodSeconds: 10

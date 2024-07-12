@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-devops-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-devops-api
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-devops-api
+    spec:
+      containers:
+      - name: devops-api
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        env:
+        - name: DBUSER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-devops-api-config
+              key: DBUSER
+        - name: DB
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-devops-api-config
+              key: DB
+        - name: DBPASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-devops-api-secret
+              key: DBPASS
+        - name: DBHOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-devops-api-config
+              key: DBHOST
+        - name: DBPORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-devops-api-config
+              key: DBPORT
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-devops-api-config
+              key: PORT
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.readinessProbe.path }}
+            port: {{ .Values.readinessProbe.port }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.livenessProbe.path }}
+            port: {{ .Values.livenessProbe.port }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}

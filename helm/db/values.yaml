@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: mysql
+  tag: "5.7"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3306
+
+env:
+  MYSQL_ROOT_PASSWORD: rootpassword
+  MYSQL_DATABASE: devops_db
+  MYSQL_USER: devops_user
+  MYSQL_PASSWORD: password
+
+persistence:
+  storage: 1Gi
+  accessMode: ReadWriteOnce
+
+backup:
+  schedule: "* 3 * * *"
+  storage: 1Gi
+  accessMode: ReadWriteOnce

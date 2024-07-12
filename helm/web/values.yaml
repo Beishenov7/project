@@ -1,0 +1,26 @@
+replicaCount: 3
+
+image:
+  repository: karabalta75/web
+  tag: "2.0.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 3000
+
+env:
+  API_HOST: http://devops-api:3001
+  PORT: "3000"
+
+readinessProbe:
+  path: /health
+  port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+livenessProbe:
+  path: /health
+  port: 3000
+  initialDelaySeconds: 10
+  periodSeconds: 10
