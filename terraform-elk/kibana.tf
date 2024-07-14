@@ -1,4 +1,5 @@
 resource "helm_release" "kibana" {
+  depends_on = [null_resource.helm_repo_update]
   name       = "kibana"
   repository = "elastic https://helm.elastic.co"
   chart      = "elastic/kibana"
@@ -11,6 +12,6 @@ resource "helm_release" "kibana" {
 
   set {
     name  = "resources.requests.memory"
-    value = "1Gi"
+    value = "100Mi"
   }
 }
