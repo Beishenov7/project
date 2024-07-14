@@ -8,14 +8,14 @@ provider "helm" {
   }
 }
 
-resource "helm_repository" "elastic" {
-  name = "elastic"
-  url  = "https://helm.elastic.co"
-}
+resource "null_resource" "helm_repo_add" {
+  provisioner "local-exec" {
+    command = "helm repo add elastic https://helm.elastic.co && helm repo add prometheus-community https://prometheus-community.github.io/helm-charts"
+  }
 
-resource "helm_repository" "prometheus_community" {
-  name = "prometheus-community"
-  url  = "https://prometheus-community.github.io/helm-charts"
+  triggers = {
+    always_run = "${timestamp()}"
+  }
 }
 
 resource "null_resource" "helm_repo_update" {
@@ -26,11 +26,8 @@ resource "null_resource" "helm_repo_update" {
   triggers = {
     always_run = "${timestamp()}"
   }
-
-  depends_on = [
-    helm_repository.elastic,
-    helm_repository.prometheus_community
-  ]
+  
+  depends_on = [null_resource.helm_repo_add]
 }
 
 resource "helm_release" "elasticsearch" {
