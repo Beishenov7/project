@@ -6,7 +6,6 @@ metadata:
     run: kubernetes
   name: kubernetes
 spec:
-  serviceAccount: kubernetes
   containers:
   - image: kaizenacademy/command:4.0
     name: kubernetes
