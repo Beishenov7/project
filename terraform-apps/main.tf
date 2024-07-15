@@ -8,20 +8,10 @@ provider "helm" {
   }
 }
 
-resource "helm_release" "api" {
-  name       = "api"
-  chart      = "../helm/api"
-  version    = "0.1.0"
-}
+resource "helm_release" "services" {
+  for_each = local.helm_releases
 
-resource "helm_release" "web" {
-  name       = "web"
-  chart      = "../helm/web"
-  version    = "0.1.0"
-}
-
-resource "helm_release" "mysql" {
-  name       = "mysql"
-  chart      = "../helm/db"
-  version    = "0.1.0"
+  name       = each.key
+  chart      = each.value.chart
+  version    = each.value.version
 }
