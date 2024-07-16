@@ -20,6 +20,6 @@ persistence:
   accessMode: ReadWriteOnce
 
 backup:
-  schedule: "* 3 * * *"
+  schedule: "0 3 * * *"
   storage: 1Gi
   accessMode: ReadWriteOnce

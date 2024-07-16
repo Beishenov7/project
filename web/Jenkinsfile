@@ -1,0 +1,55 @@
+template = '''
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: docker
+  name: docker
+spec:
+  containers:
+  - command:
+    - sleep
+    - "3600"
+    image: docker
+    name: docker
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker
+  volumes:
+  - name: docker
+    hostPath:
+      path: /var/run/docker.sock
+    '''
+
+podTemplate(cloud: 'kubernetes', label: 'docker', yaml: template ) {
+    node("docker") {
+      container("docker") {
+        withCredentials([usernamePassword(credentialsId: 'docker-creds', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+        
+    stage("Checkout SCM") {
+
+        withCredentials([usernamePassword(credentialsId: 'toptal-private-repo', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+    git branch: 'main', url: "https://${GIT_USERNAME}:${GIT_PASSWORD}@git.toptal.com/screening-ops/Zhashar-beishenov"
+}
+               
+
+            
+        }
+    
+        
+    stage("Docker build") {
+        sh """
+        cd web
+        docker build -t ${DOCKER_USER}/web:2.0.0 .
+        """
+    }
+    stage("Docker push") {
+        sh """
+        docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+        docker push ${DOCKER_USER}/web:2.0.0
+        """
+    }
+   }
+  }
+}
+}
